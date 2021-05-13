@@ -43,13 +43,15 @@ DJANGO_APPS = [
 
 THIRD_PARTY_APPS = [
     "rest_framework",
+    "django_extensions",
 ]
 
 LOCAL_APPS = [
     "users.apps.UsersConfig",
+    "products.apps.ProductsConfig",
 ]
 
-INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS 
+INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS  + THIRD_PARTY_APPS
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
