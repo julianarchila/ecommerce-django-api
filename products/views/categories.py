@@ -14,7 +14,7 @@ from products.serializers import CategoryModelSerializer
 # Model
 from products.models import Category
 
-class CategoriesViewSet(mixins.ListModelMixin,GenericViewSet):
+class CategoryViewSet(mixins.ListModelMixin,GenericViewSet):
     """ Categories view set. """
     serializer_class = CategoryModelSerializer 
     queryset = Category.objects.all()
