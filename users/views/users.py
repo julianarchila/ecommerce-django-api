@@ -31,10 +31,11 @@ class UserViewSet(GenericViewSet):
     def signup(self, request, *args, **kwargs):
         serializer = UserSignUpSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        user = serializer.save()
+        user, token = serializer.save()
         data = {
-            "message": "ok",
-            "user": UserModelSerializer(instance=user).data
+            "message": "Account successfully created",
+            "user": UserModelSerializer(instance=user).data,
+            "token": token,
         }
 
         return Response(data=data, status=status.HTTP_201_CREATED)
