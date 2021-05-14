@@ -4,7 +4,7 @@
 from rest_framework import permissions, status
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
-from rest_framework.mixins import ListModelMixin, CreateModelMixin
+from rest_framework.mixins import ListModelMixin, CreateModelMixin, UpdateModelMixin, DestroyModelMixin
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 
 # Serializers
@@ -15,7 +15,11 @@ from products.models import Product
 
 
 
-class ProductViewSet(ListModelMixin,CreateModelMixin,GenericViewSet):
+class ProductViewSet(ListModelMixin,
+                    CreateModelMixin,
+                    UpdateModelMixin,
+                    DestroyModelMixin,
+                    GenericViewSet):
     """Product view set. """
     queryset = Product.objects.all()
     serializer_class = ProductModelSerializer
@@ -25,7 +29,7 @@ class ProductViewSet(ListModelMixin,CreateModelMixin,GenericViewSet):
         Instantiates and returns the list of permissions that this view requires.
         """
         permissions = [IsAuthenticated]
-        if self.action == "create":
+        if self.action != "list":
             permissions.append(IsAdminUser)
 
         return [p() for p in permissions]
