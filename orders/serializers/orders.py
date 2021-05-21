@@ -38,9 +38,18 @@ class CreateOrderItemSerializer(serializers.ModelSerializer):
         model = OrderItem
         fields = (
             "product",
-            "price",
             "quantity"
         )
+
+    def validate(self, data):
+        """ Asing price to current product price and creates object. """
+        product =  data["product"]
+
+        if product.stock < data["quantity"]:
+            raise serializers.ValidationError("There is not enough stock")
+
+        data["price"] = product.price
+        return data
 
 
 class CreateOrderSerializer(serializers.ModelSerializer):
@@ -52,26 +61,19 @@ class CreateOrderSerializer(serializers.ModelSerializer):
     # user = serializers.CurrentUserDefault()
     class Meta:
         model = Order
-        # exclude = []
         fields = "__all__"
 
-    # def validate_items(self, data):
-    #     """ Handles order items validation and creation. """
-    #     for item in data:
-    #         try:
-    #             product = Product.objects.get(item.product)
-    #         except Product.DoesNotExist:
-    #             raise serializers.ValidationError(f"Product with id of {item.product} does not exist.")
-
-    #     return data
-
+            
     def create(self, data):
         """ Handles order creation. """
         items_data = data.pop("items")
         order = Order.objects.create(**data)
 
         for item in items_data:
-            OrderItem.objects.create(**item, order=order)
+            order_item = OrderItem.objects.create(**item, order=order)
+            product = order_item.product
+            product.stock -= order_item.quantity
+            product.save()
 
         return order
         

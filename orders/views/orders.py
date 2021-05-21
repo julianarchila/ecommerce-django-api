@@ -37,5 +37,3 @@ class OrderViewSet(mixins.ListModelMixin,mixins.CreateModelMixin,GenericViewSet)
         order = serializer.save()
         data = OrderModelSerializer(order).data
         return Response(data, status=status.HTTP_201_CREATED)
-
-
