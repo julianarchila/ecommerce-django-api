@@ -10,6 +10,7 @@ from rest_framework.authtoken.models import Token
 
 # Model
 from users.models import User, Profile
+from orders.models import Cart
 
 
 class UserModelSerializer(serializers.ModelSerializer):
@@ -88,8 +89,14 @@ class UserSignUpSerializer(serializers.Serializer):
 
     def create(self, data):
         data.pop("password_confirmation")
+        # Create user
         user = User.objects.create_user(**data, is_staff=False)
+
+        # Create user's objects
         Profile.objects.create(user=user)
+        Cart.objects.create(user=user)
+
+
         token, created = Token.objects.get_or_create(user=user)
 
         return user, token.key

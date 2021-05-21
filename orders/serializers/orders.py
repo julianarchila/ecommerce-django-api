@@ -32,7 +32,7 @@ class OrderModelSerializer(serializers.ModelSerializer):
 
 class CreateOrderItemSerializer(serializers.ModelSerializer):
     """ Create order item serializer. 
-    Serializer used to recive order imtes data in create order serializer.
+    Serializer used to recive order items data in create order serializer.
     """
     class Meta:
         model = OrderItem
