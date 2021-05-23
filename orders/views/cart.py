@@ -10,9 +10,10 @@ from rest_framework import mixins
 
 # Permissions
 from rest_framework.permissions import IsAuthenticated
+from orders.permissions.cart import IsCartItemOwner
 
 # Serializers
-from orders.serializers import CartModelSerializer, AddCartItemSerializer
+from orders.serializers import CartModelSerializer, AddCartItemSerializer, UpdateCartItemSerializer
 
 # Models
 from orders.models import Cart
@@ -23,6 +24,7 @@ class CartViewSet(
     mixins.ListModelMixin,
     mixins.DestroyModelMixin,
     mixins.RetrieveModelMixin,
+    mixins.UpdateModelMixin,
     mixins.CreateModelMixin,
     GenericViewSet):
     """ Cart viewset. """
@@ -38,15 +40,17 @@ class CartViewSet(
     def get_serializer_class(self):
         if self.action == "list":
             serializer_class = CartModelSerializer
+        elif self.action in ["update", "partial_update"]:
+            serializer_class = UpdateCartItemSerializer
         else:
             serializer_class = CartItemModelSerializer
-
         return serializer_class
-
 
 
     def get_permissions(self):
         permissions = [IsAuthenticated]
+        if self.action in ["retrieve", "update", "partial_update", "destroy"]:
+            permissions.append(IsCartItemOwner)
         return [p() for p in permissions]
 
 
@@ -57,7 +61,6 @@ class CartViewSet(
         return Response(serializer.data)
 
 
-    # @action(detail=False, methods=["POST"])
     def create(self, request, *args, **kwargs):
         """ Add item to the cart. """
         serializer = AddCartItemSerializer(

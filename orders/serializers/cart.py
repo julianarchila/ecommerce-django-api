@@ -30,7 +30,7 @@ class AddCartItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = CartItem
         fields = ("product", "quantity", "user")
-        extra_kwargs = {'quantity': {'required': True}} 
+        extra_kwargs = {'quantity': {'required': True}}
 
     def validate(self, data):
         """ Validate there is enough stock."""
@@ -48,6 +48,20 @@ class AddCartItemSerializer(serializers.ModelSerializer):
         return cart 
 
     
+class UpdateCartItemSerializer(serializers.ModelSerializer):
+    """ Update cart item serializer. """
+    class Meta:
+        model = CartItem
+        fields = ("quantity",)
+
+    def validate_quantity(self, quantity):
+        product = self.instance.product
+
+        if product.stock < quantity:
+            raise serializers.ValidationError("There is not enough stock")
+
+        return quantity 
+
 
     
 
