@@ -2,7 +2,7 @@ from .base import *
 
 SECRET_KEY = env('DJANGO_SECRET_KEY', default='s&2a&ig%3=y3&c4#%!pffr3)&k_-e72$tsv)_opghj5(@bo40m')
 
-DEBUG = False
+DEBUG = False 
 
 ALLOWED_HOSTS = env.list("ALLOWED_HOST")
 
@@ -29,11 +29,17 @@ MIDDLEWARE = [
 ]
 
 # Media
-MEDIA_ROOT = BASE_DIR / "media"
-MEDIA_URL = "/media/"
 
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
-STATIC_ROOT = BASE_DIR / "static"
+DEFAULT_FILE_STORAGE = 'storages.backends.azure_storage.AzureStorage'
+STATICFILES_STORAGE = 'custom_storage.custom_azure.PublicAzureStorage'
+
+
+AZURE_ACCOUNT_NAME = 'ecommercedjangostorage'
+AZURE_CONTAINER = 'media'
+AZURE_ACCOUNT_KEY =env.str("AZURE_ACCOUNT_KEY") 
+
+# STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+# STATIC_ROOT = BASE_DIR / "static"
 
 
 CORS_ALLOWED_ORIGINS = env.list("CORS_ALLOWED_ORIGINS", default="") 

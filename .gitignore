@@ -121,6 +121,7 @@ celerybeat.pid
 .env
 .env/
 .venv/
+azure-blob-env/
 env/
 venv/
 ENV/
@@ -157,3 +158,4 @@ Thumbs.db
 
 # profiling data
 .prof
+.vscode
