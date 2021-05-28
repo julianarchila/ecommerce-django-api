@@ -20,6 +20,7 @@ from orders.models import Cart
 from orders.models import CartItem
 
 
+
 class CartViewSet(
     mixins.ListModelMixin,
     mixins.DestroyModelMixin,
@@ -52,7 +53,6 @@ class CartViewSet(
         if self.action in ["retrieve", "update", "partial_update", "destroy"]:
             permissions.append(IsCartItemOwner)
         return [p() for p in permissions]
-
 
     def list(self, request, *args, **kwargs):
         """ List items in user's cart. """

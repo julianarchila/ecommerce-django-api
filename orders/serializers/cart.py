@@ -43,9 +43,18 @@ class AddCartItemSerializer(serializers.ModelSerializer):
 
     def create(self, data):
         user = data.pop("user") 
+        product = data.pop("product")
+        
         cart = Cart.objects.get(user=user)
-        cart_item = CartItem.objects.create(**data, cart=cart)
+        
+        if CartItem.objects.filter(cart=cart, product=product).exists():
+            cart_item = CartItem.objects.get(cart=cart, product=product)
+            cart_item.quantity += data["quantity"]
+            cart_item.save()
+        else:
+            cart_item = CartItem.objects.create(**data, cart=cart)
         return cart 
+        
 
     
 class UpdateCartItemSerializer(serializers.ModelSerializer):
